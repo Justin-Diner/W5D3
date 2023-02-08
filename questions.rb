@@ -1,4 +1,4 @@
-require 'SQLite3'
+require 'sqlite3'
 require 'singleton'
 require 'byebug'
 
@@ -25,3 +25,5 @@ class User
 		@lname = option['lname']
 	end
 end
+
+p User.all
