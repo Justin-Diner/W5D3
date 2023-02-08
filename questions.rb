@@ -12,6 +12,7 @@ class QuestionsDatabase < SQLite3::Database
 end
 
 class User
+	attr_accessor :id, :fname, :lname
 
 	def self.all 
 		debugger
@@ -24,6 +25,18 @@ class User
 		@fname = option['fname']
 		@lname = option['lname']
 	end
+
+	def create
+		raise "#{self} already in database" if @id
+		QuestionsDatabase.instance.execute(<<-SQL, self.fname, self.lname)
+			INSERT INTO
+				users (fname, lname)
+			VALUES
+				(?, ?)
+		SQL
+		@id = QuestionsDatabase.instance.last_insert_row_id
+	end
+
 end
 
-p User.all
+# p User.all
