@@ -27,7 +27,7 @@ CREATE TABLE question_follows (
 CREATE TABLE replies (
     id INTEGER PRIMARY KEY,
     queston_id INTEGER NOT NULL,
-    parent_reply_id INTEGER NOT NULL,
+    parent_reply_id INTEGER,
     user_id INTEGER NOT NULL,
     body TEXT NOT NULL,
 
@@ -57,7 +57,7 @@ VALUES
 	('How do you do SQL?', 'Help Please! I don''t know how to do homework!', (SELECT id FROM users WHERE fname = 'Milner')),
 	('Do you need to use LIKE or = for string comparison?', "Help Me Too! I'm lost!!", (SELECT id FROM users WHERE fname = 'Justin'));
 
-INSERT INTO 
+INSERT INTO -- Question follow
 	question_follows(question_id, user_id)
 VALUES
 	((SELECT id FROM questions WHERE title = 'How do you do SQL?'), 
@@ -65,4 +65,26 @@ VALUES
 	((SELECT id FROM questions WHERE title = 'Do you need to use LIKE or = for string comparison?'), 
 	(SELECT id from users WHERE fname = 'Milner'));
 
+INSERT INTO -- replies
+    replies (question_id, parent_reply_id, user_id, body)
+VALUES
+    (
+        (SELECT id FROM questions WHERE title = 'How do you do SQL?'),
+        NULL,
+        (SELECT id FROM users WHERE fname = 'Milner'),
+        'Why isn''t anyone helping me!!!!'
+    ),
+    (
+        (SELECT id FROM questions WHERE title = 'How do you do SQL?'),
+        (SELECT id FROM replies WHERE body = 'Why isn''t anyone helping me!!!!'),
+        (SELECT id FROM users WHERE fname = 'Justin'),
+        'I''m to help!!!'
+    );
 
+INSERT INTO -- Question likes
+    question_likes (question_id, user_id)
+VALUES
+    (
+        (SELECT id FROM questions WHERE title = 'How do you do SQL?'),
+        (SELECT id FROM users WHERE fname = 'Justin')
+    );
